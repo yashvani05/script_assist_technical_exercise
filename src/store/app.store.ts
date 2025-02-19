@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import CryptoJS from "crypto-js";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
 
 const SECRET_KEY = import.meta.env.VITE_SECRET_KEY || "default_secret";
 
@@ -33,7 +32,9 @@ const decryptData = (cipherText: string) => {
 };
 
 const generateToken = () => {
-  return crypto.randomBytes(32).toString("hex");
+  const array = new Uint8Array(32);
+  window.crypto.getRandomValues(array);
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join("");
 };
 
 const getStoredAuth = (): { user: AuthState["user"]; token: string | null } => {
